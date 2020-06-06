@@ -7,7 +7,7 @@ const App = ({ Component, pageProps }) => {
     return (
         <div>
             <Header />
-            <div className='min-h-screen container mx-auto'>
+            <div className='min-h-screen container mx-auto block'>
                 <Component {...pageProps} />
             </div>
             <Footer />
