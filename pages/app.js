@@ -3,7 +3,6 @@ import auth0 from '../lib/auth0'
 import router from 'next/router'
 import { db }  from '../lib/db'
 import { distance } from '../lib/geo'
-import GoogleMapReact from 'google-map-react';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -32,24 +31,7 @@ const App = (props) => {
                         </tr>
                     )
                 })}
-            </table> 
-            {props.checkins.map(checkin => {
-                return (
-                    <div style={{ height: '500px', width: '500px' }}>
-                        <GoogleMapReact
-                        bootstrapURLKeys={{ key: 'AIzaSyC7h-rXw0OKkcuaeGh8Q-hD64DjgJV4PWY' }}
-                        defaultCenter={checkin.center}
-                        defaultZoom={checkin.zoom}
-                        >
-                        <AnyReactComponent
-                            lat={checkin.coords.lat}
-                            lng={checkin.coords.long}
-                            text={checkin.status}
-                        />
-                        </GoogleMapReact>
-                    </div>
-                )
-            })}           
+            </table>                       
         </div>
     )
 }
@@ -90,16 +72,11 @@ export async function getServerSideProps ({ req, res }) {
                         long: doc.data().coordinates.longitude
                     },
                     distance: distance(
-                        -2.900360, //todayData.coordinates.latitude, 
-                        -40.842949, //todayData.coordinates.longitude, 
+                        todayData.coordinates.latitude, 
+                        todayData.coordinates.longitude, 
                         doc.data().coordinates.latitude, 
                         doc.data().coordinates.longitude
-                    ).toFixed(2),
-                    center: {
-                        lat: 59.95,
-                        lng: 30.33
-                    },
-                    zoom: 11
+                    ).toFixed(2)
                 })
             })
             return {
