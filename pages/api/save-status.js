@@ -1,24 +1,14 @@
-import {db} from '../../lib/db'
-import admin from 'firebase-admin'
 import auth0 from '../../lib/auth0'
+import { setStatus } from '../../model/markes'
 
-const savaStatus = async(req, res) => {
+const saveStatus = async(req, res) => {
+    console.log(req.body)
     const session = await auth0.getSession(req)
     if (session) {
         const dados = req.body
-        const today = new Date()
-        const currentDate = today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate()
-        await db
-        .collection('markers')
-        .doc(currentDate)
-        .collection('checks')
-        .doc(session.user.sub)
-        .set({
-            status: dados.status,
-            user: session.user.sub,
-            coordinates: new admin.firestore.GeoPoint(dados.coords.lat, dados.coords.long)
-        })
-        res.send({ ok: true })
+        await setStatus(session.user.sub, dados)    
     }
+    res.send({ ok: true })
 }
-export default savaStatus
+
+export default saveStatus
